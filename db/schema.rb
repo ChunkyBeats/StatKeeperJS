@@ -11,29 +11,32 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150519004955) do
+ActiveRecord::Schema.define(version: 20150605002309) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
-  create_table "bays", force: :cascade do |t|
+  create_table "maintenances", force: :cascade do |t|
+    t.string "description"
   end
 
-  create_table "bays_maintenances_trains_workers", force: :cascade do |t|
-    t.integer "bay_id"
+  create_table "maintenances_trains", force: :cascade do |t|
+    t.integer "maintenance_id"
+    t.integer "train_id"
+  end
+
+  add_index "maintenances_trains", ["maintenance_id"], name: "index_maintenances_trains_on_maintenance_id", using: :btree
+  add_index "maintenances_trains", ["train_id"], name: "index_maintenances_trains_on_train_id", using: :btree
+
+  create_table "maintenances_trains_workers", force: :cascade do |t|
     t.integer "maintenance_id"
     t.integer "train_id"
     t.integer "worker_id"
   end
 
-  add_index "bays_maintenances_trains_workers", ["bay_id"], name: "index_bays_maintenances_trains_workers_on_bay_id", using: :btree
-  add_index "bays_maintenances_trains_workers", ["maintenance_id"], name: "index_bays_maintenances_trains_workers_on_maintenance_id", using: :btree
-  add_index "bays_maintenances_trains_workers", ["train_id"], name: "index_bays_maintenances_trains_workers_on_train_id", using: :btree
-  add_index "bays_maintenances_trains_workers", ["worker_id"], name: "index_bays_maintenances_trains_workers_on_worker_id", using: :btree
-
-  create_table "maintenances", force: :cascade do |t|
-    t.string "description"
-  end
+  add_index "maintenances_trains_workers", ["maintenance_id"], name: "index_maintenances_trains_workers_on_maintenance_id", using: :btree
+  add_index "maintenances_trains_workers", ["train_id"], name: "index_maintenances_trains_workers_on_train_id", using: :btree
+  add_index "maintenances_trains_workers", ["worker_id"], name: "index_maintenances_trains_workers_on_worker_id", using: :btree
 
   create_table "trains", force: :cascade do |t|
     t.string "atis_ref_id"
@@ -42,6 +45,7 @@ ActiveRecord::Schema.define(version: 20150519004955) do
   create_table "workers", force: :cascade do |t|
     t.string "first_name"
     t.string "last_name"
+    t.string "craft"
   end
 
 end
