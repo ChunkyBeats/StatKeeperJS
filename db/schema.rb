@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150605002309) do
+ActiveRecord::Schema.define(version: 20150610001157) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -41,6 +41,26 @@ ActiveRecord::Schema.define(version: 20150605002309) do
   create_table "trains", force: :cascade do |t|
     t.string "atis_ref_id"
   end
+
+  create_table "trains_workers", force: :cascade do |t|
+    t.integer "train_id"
+    t.integer "worker_id"
+  end
+
+  add_index "trains_workers", ["train_id"], name: "index_trains_workers_on_train_id", using: :btree
+  add_index "trains_workers", ["worker_id"], name: "index_trains_workers_on_worker_id", using: :btree
+
+  create_table "work_order", force: :cascade do |t|
+    t.integer  "train_id"
+    t.integer  "worker_id"
+    t.integer  "maintenance_id"
+    t.datetime "start_time"
+    t.datetime "end_time"
+  end
+
+  add_index "work_order", ["maintenance_id"], name: "index_work_order_on_maintenance_id", using: :btree
+  add_index "work_order", ["train_id"], name: "index_work_order_on_train_id", using: :btree
+  add_index "work_order", ["worker_id"], name: "index_work_order_on_worker_id", using: :btree
 
   create_table "workers", force: :cascade do |t|
     t.string "first_name"
